@@ -5,6 +5,7 @@ const balls = document.querySelectorAll(".ball");
 const selectedBalls = document.getElementsByClassName("selected");
 let currentBall;
 let value = "";
+value.innerHTML = "a";
 let allow = false;
 
 balls.forEach((ball) => {
@@ -14,7 +15,6 @@ balls.forEach((ball) => {
     buckets.forEach((bucket) => {
       bucket.style.boxShadow = `var(--unselected)`;
     });
-    firstBucket.style.boxShadow = `var(--selected)`;
     ball.remove();
   });
 });
@@ -24,22 +24,34 @@ buckets.forEach((bucket) => {
     buckets.forEach((bucket) => {
       bucket.style.boxShadow = `var(--unselected)`;
     });
-    bucket.style.boxShadow = `var(--selected)`;
+
     if (value === "") {
       if (bucket.innerHTML.trim() !== "") {
+        bucket.style.boxShadow = `var(--selected)`;
         value = bucket.lastChild;
-        bucket.lastChild.style.opacity = '0.6';
-        bucket.lastChild.classList.add('currentball');
-        currentBall = document.querySelector('.currentball');      
+        bucket.lastChild.classList.add("currentball");
+        currentBall = document.querySelector(".currentball");
       }
-      else{}
     } else {
-      bucket.innerHTML += value.outerHTML;
-      bucket.lastChild.style.opacity = '1';
-      bucket.lastChild.classList.remove('currentball');
-      currentBall.remove();
-      value = "";
+      if (bucket.lastChild) {
+        if (bucket.lastChild.innerHTML === value.innerHTML) {
+          bucket.style.boxShadow = `var(--unselected)`;
+          value = "";
+          bucket.lastChild.classList.remove("currentball");
+        } else {
+          bucket.style.boxShadow = `var(--unselected)`;
+          bucket.innerHTML += value.outerHTML;
+          value = "";
+          bucket.lastChild.classList.remove("currentball");
+          currentBall.remove();
+        }
+      } else {
+        bucket.style.boxShadow = `var(--unselected)`;
+        bucket.innerHTML += value.outerHTML;
+        value = "";
+        bucket.lastChild.classList.remove("currentball");
+        currentBall.remove();
+      }
     }
   });
 });
-
